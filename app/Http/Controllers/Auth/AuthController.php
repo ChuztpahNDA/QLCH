@@ -16,20 +16,20 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $tokenResult = $user->createToken('Personal Access Token');
-            $token = $tokenResult->token;
-            $token->save();
 
-            return response()->json([
-                'access_token' => $tokenResult->accessToken,
-                'token_type' => 'Bearer',
-                'expires_at' => $token->expires_at
-            ]);
-        } else {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+    if (Auth::attempt($credentials)) {
+        $user = Auth::user();
+        $tokenResult = $user->createToken('userToken');
+        $accessToken = $tokenResult->accessToken;
+
+        return response()->json([
+            'access_token' => $accessToken,
+            'token_type' => 'Bearer',
+            'expires_at' => $tokenResult->token->expires_at,
+        ]);
+    } else {
+        return response()->json(['error' => 'UNAUTHORIZED'], 401);
+    }
     }
 
     public function register(RegisterRequest $request)
@@ -42,13 +42,19 @@ class AuthController extends Controller
         return ["message" => "Success!", 'data' => $user->id];
     }
 
+    // Phương thức refresh token
     public function refreshToken(Request $request)
     {
-        $request->validate([
-            'refresh_token' => 'required',
-        ]);
+        $user = auth('api')->user();
+        // remove old token
+        $user->tokens->each(function ($token) {
+            $token->delete();
+        });
 
-        $refreshToken = $request->refresh_token;
-        // Logic to refresh token using Passport
+        // create new token
+        $token = $request->user()->createToken('userToken')->accessToken;
+
+
+        return ['access_token' => $token, 'code' => 200];
     }
 }

@@ -20,12 +20,6 @@ axios.interceptors.request.use(config => {
     return Promise.reject(error);
 });
 
-// Cấu hình CSRF token cho axios nếu cần thiết
-const csrfToken = document.querySelector('meta[name="csrf-token"]');
-if (csrfToken) {
-    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
-}
-
 app.config.productionTip = false;
 
 // Sử dụng Antd, router và store

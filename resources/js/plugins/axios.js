@@ -1,48 +1,35 @@
 import axios from 'axios';
-import store from './store'; // Đường dẫn này có thể thay đổi tùy theo cấu trúc dự án của bạn
+import store from '../store'; // Đường dẫn này phụ thuộc vào cấu trúc thư mục của dự án
+import router from '@/router';
+// Cấu hình CSRF token cho axios nếu cần thiết
+const csrfToken = document.querySelector('meta[name="csrf-token"]');
+if (csrfToken) {
+    axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
+}
+
 
 const api = axios.create({
-  baseURL: 'http://your-laravel-app.test/api', // Thay thế URL này bằng URL API của bạn
-  headers: {
-    'Content-Type': 'application/json',
-  },
+    baseURL: window.location.origin + '/api/v1', // Thay thế URL này bằng URL API của bạn
+    headers: {
+        'Content-Type': 'application/json',
+    },
 });
 
 api.interceptors.request.use(
-  config => {
-    const token = store.getters['auth/accessToken'];
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+    config => {
+        const token = store.getters['access_token'];
+        if (token) {
+            config.headers['Authorization'] = `Bearer ${token}`;
+        } else {
+            router.push({
+                name: 'login'
+            });
+        }
+        return config;
+    },
+    error => {
+        return Promise.reject(error);
     }
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  }
-);
-
-api.interceptors.response.use(
-  response => {
-    return response;
-  },
-  async error => {
-    const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const refreshToken = store.getters['auth/refreshToken'];
-        const response = await api.post('/refresh-token', { refresh_token: refreshToken });
-        const newAccessToken = response.data.access_token;
-        store.commit('auth/setAccessToken', newAccessToken);
-        api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-        return api(originalRequest);
-      } catch (err) {
-        store.commit('auth/logout');
-        return Promise.reject(err);
-      }
-    }
-    return Promise.reject(error);
-  }
 );
 
 export default api;

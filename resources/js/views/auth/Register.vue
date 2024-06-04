@@ -3,31 +3,38 @@
         <a-col :xl="8" :lg="8" :md="8" :sm="12" :xs="12">
             <a-form layout="vertical">
                 <!-- Email input -->
-                <a-form-item label="Email address"
-                    :validateStatus="rules?.email ? 'error' : ''"
+                <a-form-item label="Email address" :validateStatus="rules?.email ? 'error' : ''"
                     :help="rules?.email ? rules?.email[0] : ''">
                     <a-input v-model:value="formData.email" placeholder="Enter email login" @pressEnter="onsubmit" />
                 </a-form-item>
 
                 <!-- Password input -->
-                <a-form-item label="Password"
-                    :validateStatus="rules?.password ? 'error' : ''"
+                <a-form-item label="Password" :validateStatus="rules?.password ? 'error' : ''"
                     :help="rules?.password ? rules?.password[0] : ''">
                     <a-input-password v-model:value="formData.password" placeholder="Enter your password"
                         @pressEnter="onsubmit" />
                 </a-form-item>
 
                 <!-- Confirm password -->
-                <a-form-item label="Confirm Password"
-                    :validateStatus="rules?.password_confirmation ? 'error' : ''"
+                <a-form-item label="Confirm Password" :validateStatus="rules?.password_confirmation ? 'error' : ''"
                     :help="rules?.password_confirmation ? rules?.password_confirmation[0] : ''">
                     <a-input-password v-model:value="formData.password_confirmation"
                         placeholder="Enter your confirm password" @pressEnter="onsubmit" />
                 </a-form-item>
-
                 <!-- Submit button -->
-                <a-button type="primary" @click="onsubmit()">Submit</a-button>
+                <a-row>
+                    <a-button type="primary" @click="onsubmit()">Submit</a-button>
+                    <a-button style="margin-left: 10px;" @click="() => {
+                        $router.push(
+                            {
+                                name: 'Login',
+                            });
+                    }">Quay lại</a-button>
+                </a-row>
             </a-form>
+            <div style="margin-top: 20px;">
+
+            </div>
         </a-col>
 
         <a-col :xl="16" :lg="16" :md="16" :sm="12" :xs="12">
@@ -44,7 +51,7 @@ import {
 
 } from '@ant-design/icons-vue';
 import { InputPassword } from "ant-design-vue";
-import axios from "axios";
+import axios from "../../plugins/axios";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -63,13 +70,13 @@ export default defineComponent({
         })
 
         const onsubmit = (type) => {
-            axios.post('api/v1/register', formData.value)
+            axios.post('/register', formData.value)
                 .then((res) => {
                     router.push({
-                        name: 'Login'
+                        name: 'login'
                     })
                 })
-                .catch ((e) => {
+                .catch((e) => {
                     rules.value = e.response.data.errors;
                 });
         };

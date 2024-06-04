@@ -15,8 +15,5 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-
-        // Thiết lập Passport routes
-        // Passport::routes();
     }
 }

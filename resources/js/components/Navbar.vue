@@ -1,22 +1,67 @@
 <template>
     <div class="navbar">
       <div class="navbar-left">
-        <h1>POS System</h1>
+        <a-button
+            @click="(() => {
+                $router.push({
+                    name: 'Home'
+                });
+            })"
+        >
+            {{ 'Dashboard' }}
+        </a-button>
       </div>
       <div class="navbar-right">
-        <a-button @click="switchStore">Switch Store</a-button>
+        <!-- <a-select style="width: 300px;"
+            v-model:value="currentStore"
+        >
+          <a-select-option
+          v-for="store in stores"
+          :key="store.id" :value="store.id"> {{ store.name }}</a-select-option>
+        </a-select> -->
       </div>
     </div>
   </template>
 
   <script>
+
+  import {HomeOutlined} from '@ant-design/icons-vue';
+  import {ref, onMounted, watch} from 'vue';
+  import axios from '../plugins/axios';
   export default {
     name: 'Navbar',
-    methods: {
-      switchStore() {
-        // Logic để chuyển đổi cửa hàng
-        alert('Switch Store clicked!');
-      },
+    components: {
+        HomeOutlined,
+    },
+    setup() {
+
+        const stores = ref([]);
+        const currentStore = ref(undefined);
+
+        onMounted(() => {
+            // axios.get(`stores`).then((res) => {
+            //     stores.value = res.data;
+            //     if (localStorage.getItem('store_id') != res.data[0].id) {
+            //         currentStore.value = localStorage.getItem('store_id');
+            //     }
+            //     else {
+            //         currentStore.value = res.data[0].id;
+            //     };
+            // });
+        });
+
+        watch(() => currentStore.value,
+            (newVal, oldVal) => {
+                if (localStorage.getItem('store_id') != newVal) {
+                    localStorage.setItem('store_id', newVal);
+                }
+            }
+        );
+
+        return {
+            stores,
+            currentStore,
+        };
     },
   };
   </script>
@@ -25,7 +70,7 @@
   .navbar {
     width: 100%;
     height: 60px;
-    background-color: #34495e;
+    background-color: #282d2b;
     color: #ecf0f1;
     display: flex;
     justify-content: space-between;

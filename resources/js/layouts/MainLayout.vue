@@ -1,11 +1,19 @@
 <template>
-    <div>
+    <a-layout>
+    <a-layout-header class="header">
       <Navbar />
-      <div class="main-layout">
-        <LeftSidebar />
-        <MainContent />
-      </div>
-    </div>
+    </a-layout-header>
+    <a-layout-content style="padding: 0 50px">
+      <a-layout style="padding: 24px 0; background: #fff">
+        <a-layout-sider width="200" style="background: #fff">
+            <LeftSidebar />
+        </a-layout-sider>
+        <a-layout-content :style="{minHeight: '280px' }">
+            <MainContent />
+        </a-layout-content>
+      </a-layout>
+    </a-layout-content>
+  </a-layout>
   </template>
 
   <script>
