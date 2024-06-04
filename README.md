@@ -4,8 +4,8 @@
 git clone https://github.com/ChuztpahNDA/QLCH.git
 
 # Chạy lệnh setup
-composer install
-npm install
+- composer install
+- npm install
 
 # khởi chạy xampp
 php artisan migrate
