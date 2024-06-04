@@ -8,19 +8,19 @@ git clone https://github.com/ChuztpahNDA/QLCH.git
 - npm install
 
 # khởi chạy xampp
-php artisan migrate
-nhập yes -> ente
+- php artisan migrate
+- nhập yes -> ente
 
-rename file .env.example  thành .env
-php artisan db:seed
-php artisan passport:client --personal => nhấn enter để tiếp tục
-php artisan passport:keys
+- rename file .env.example  thành .env
+- php artisan db:seed
+- php artisan passport:client --personal => nhấn enter để tiếp tục
+- php artisan passport:keys
 
 # chạy lệnh để khởi động phần mềm
-php artisan serve
-mở 1 terminal khác chạy
-npm run dev
+- php artisan serve
+- mở 1 terminal khác chạy
+- npm run dev
 
 # Tài khoản Login
-TK: admin@example.com
-MK: 12345678
+- TK: admin@example.com
+- MK: 12345678
